@@ -70,9 +70,9 @@ class XSLT:
         :returns: a transform function
         '''
         from lxml import etree
-
+        parser = etree.XMLParser(recover=True)  # Enable recovery mode
         with io.open(xsl_path, 'rb') as xsl_file:
-            xsl_doc = etree.parse(xsl_file)
+            xsl_doc = etree.parse(xsl_file, parser=parser)
 
         self.xsl_path = xsl_path
         self.etree_xslt = etree.XSLT(xsl_doc)
@@ -98,7 +98,8 @@ class XSLT:
         # input, output: binary stream
 
         from lxml import etree
-        source = etree.parse(input)
+        parser = etree.XMLParser(recover=True)  # Enable recovery mode
+        source = etree.parse(input, parser=parser)
         logger.info('_lxml.xslt(%s) start',
                     os.path.basename(self.xsl_path))
         result = self.etree_xslt(source, **self.params)
@@ -128,9 +129,9 @@ class RelaxNG:
 
     def __init__(self, rng_path):
         from lxml import etree
-
+        parser = etree.XMLParser(recover=True)  # Enable recovery mode
         with io.open(rng_path, 'rb') as rng_file:
-            rng = etree.parse(rng_file)
+            rng = etree.parse(rng_file, parser=parser)
 
         self.rng_path = rng_path
         self.etree_relaxng = etree.RelaxNG(rng)
